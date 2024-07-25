@@ -43,11 +43,32 @@ class StreamManager {
     }
 
     public function getAlbumArt($artist, $song): ?string {
+        // Try iTunes first
         $response = @file_get_contents('https://itunes.apple.com/search?term=' . urlencode("$artist $song") . '&media=music&limit=1');
-        if (!$response) return null;
+        if ($response) {
+            $data = json_decode($response, true);
+            if ($data['resultCount'] > 0) {
+                return str_replace('100x100bb', '512x512bb', $data['results'][0]['artworkUrl100']);
+            }
+        }
 
-        $data = json_decode($response, true);
-        return $data['resultCount'] > 0 ? str_replace('100x100bb', '512x512bb', $data['results'][0]['artworkUrl100']) : null;
+        // Fallback to CoverArtArchive using MusicBrainz
+        $response = @file_get_contents('https://musicbrainz.org/ws/2/recording/?query=artist:' . urlencode($artist) . '%20AND%20recording:' . urlencode($song) . '&fmt=json');
+        if ($response) {
+            $data = json_decode($response, true);
+            if (!empty($data['recordings'])) {
+                $mbid = $data['recordings'][0]['releases'][0]['id'];
+                $coverResponse = @file_get_contents('https://coverartarchive.org/release/' . $mbid);
+                if ($coverResponse) {
+                    $coverData = json_decode($coverResponse, true);
+                    if (!empty($coverData['images'][0]['thumbnails']['large'])) {
+                        return $coverData['images'][0]['thumbnails']['large'];
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     public function getAdditionalInfo($streamingUrl): array {
