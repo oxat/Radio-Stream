@@ -37,8 +37,12 @@ class StreamManager {
         return null;
     }
 
+    private function sanitizeTitle($title): string {
+        return trim($title, "' ");
+    }
+
     public function extractArtistAndSong($title): array {
-        $parts = array_map('trim', explode(' - ', trim($title, "'")));
+        $parts = array_map('trim', explode(' - ', $this->sanitizeTitle($title)));
         return count($parts) == 2 ? $parts : ["Unknown Artist", "Unknown Title"];
     }
 
