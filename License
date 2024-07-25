@@ -1,0 +1,8 @@
+### Instructions for Usage:
+1. **Upload to Server**: Instructions to upload the `Radio.php` script to a PHP-enabled web server.
+2. **Access the Script**: Instructions on how to access the script via URL with examples.
+3. **Parameters**: Explanation of the parameters used in the URL.
+4. **Example Response**: An example JSON response that the script returns.
+5. **License**: Mention the license under which your code is distributed. Adjust as necessary.
+
+This `README.md` provides a clear description and usage instructions for your project without the repository cloning section.
