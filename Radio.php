@@ -68,7 +68,7 @@ if ($title) {
     $artUrl = $streamManager->getAlbumArt($artist, $song);
 
     echo json_encode([
-        "songtitle" => "$artist - $song",
+        "songtitle" => $title,
         "artist" => $artist,
         "song" => $song,
         "artwork" => $artUrl,
